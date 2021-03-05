@@ -13,13 +13,21 @@ import org.springframework.stereotype.Component;
 class MyApplicationListener implements ApplicationListener<ApplicationReadyEvent> {
 	@Value("${custom.genFileDirPath}")
 	private String genFileDirPath;
-	
+
 	@Value("${custom.tmpDirPath}")
 	private String tmpDirPath;
 
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		new File(genFileDirPath).mkdirs();
-		new File(tmpDirPath).mkdirs();
+		File genFileDir = new File(genFileDirPath);
+		File tmpDir = new File(tmpDirPath);
+
+		if (genFileDir.exists() == false) {
+			genFileDir.mkdirs();
+		}
+
+		if (tmpDir.exists() == false) {
+			tmpDir.mkdirs();
+		}
 	}
 }
