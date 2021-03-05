@@ -252,7 +252,7 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void moveFile(String filePath, String destFilePath) {
 		Path file = Paths.get(filePath);
 		Path destFile = Paths.get(destFilePath);
@@ -262,5 +262,12 @@ public class Util {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String getUrlFromHttpServletRequest(HttpServletRequest req) {
+		String url = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getRequestURI()
+				+ "?" + req.getQueryString();
+
+		return url;
 	}
 }
