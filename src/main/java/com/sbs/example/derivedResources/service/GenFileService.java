@@ -24,7 +24,7 @@ public class GenFileService {
 	public ResultData saveMeta(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo,
 			String originFileName, String fileExtTypeCode, String fileExtType2Code, String fileExt, int fileSize,
 			String fileDir, int width, int height) {
-		
+
 		Map<String, Object> param = Util.mapOf("relTypeCode", relTypeCode, "relId", relId, "typeCode", typeCode,
 				"type2Code", type2Code, "fileNo", fileNo, "originFileName", originFileName, "fileExtTypeCode",
 				fileExtTypeCode, "fileExtType2Code", fileExtType2Code, "fileExt", fileExt, "fileSize", fileSize,
@@ -38,7 +38,7 @@ public class GenFileService {
 	public GenFile getGenFile(int id) {
 		return genFileDao.getGenFileById(id);
 	}
-	
+
 	GenFile getGenFile(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
 		return genFileDao.getGenFile(relTypeCode, relId, typeCode, type2Code, fileNo);
 	}
@@ -49,28 +49,28 @@ public class GenFileService {
 		String fileExtType2Code = Util.getFileExtType2CodeFromFileName(originFileName);
 		String fileExt = Util.getFileExtFromFileName(originFileName);
 		int fileSize = Util.getFileSize(filePath);
-		
+
 		int width = 0;
 		int height = 0;
-		
-		if ( fileExtTypeCode.equals("img") ) {
+
+		if (fileExtTypeCode.equals("img")) {
 			try {
 				BufferedImage bufferedImage = ImageIO.read(new File(filePath));
 				width = bufferedImage.getWidth();
 				height = bufferedImage.getHeight();
 			} catch (IOException e) {
 				e.printStackTrace();
-			} 
+			}
 		}
-		
+
 		String fileDir = Util.getNowYearMonthDateStr();
-		
+
 		ResultData saveMetaRd = saveMeta(relTypeCode, relId, typeCode, type2Code, fileNo, originFileName,
 				fileExtTypeCode, fileExtType2Code, fileExt, fileSize, fileDir, width, height);
 		int newGenFileId = (int) saveMetaRd.getBody().get("id");
 
-		if ( fileDir.length() > 0 ) {
-			saveOnDisk(newGenFileId, relTypeCode, filePath, fileDir, fileExt);			
+		if (fileDir.length() > 0) {
+			saveOnDisk(newGenFileId, relTypeCode, filePath, fileDir, fileExt);
 		}
 
 		return saveMetaRd;
@@ -91,15 +91,31 @@ public class GenFileService {
 		Util.moveFile(filePath, destFilePath);
 	}
 
-	public GenFile getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidthAndHeight(String relTypeCode, int relId, String fileExtTypeCode, int width, int height) {
-		return genFileDao.getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidthAndHeight(relTypeCode, relId, fileExtTypeCode, width, height);
-	}
+	public GenFile getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidthAndHeight(String relTypeCode, int relId,
+			String fileExtTypeCode, int width, int height) {
+		GenFile genFile = null;
 
-	public GenFile getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidth(String relTypeCode, int relId, String fileExtTypeCode, int width) {
-		return genFileDao.getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidth(relTypeCode, relId, fileExtTypeCode, width);
-	}
+		genFile = genFileDao.getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidthAndHeight(relTypeCode, relId,
+				fileExtTypeCode, width, height);
 
-	public GenFile getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndMaxWidth(String relTypeCode, int relId, String fileExtTypeCode, int maxWidth) {
-		return genFileDao.getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndMaxWidth(relTypeCode, relId, fileExtTypeCode, maxWidth);
+		if (genFile != null) {
+			return genFile;
+		}
+
+		genFile = genFileDao.getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidthAndHeight(relTypeCode, relId,
+				fileExtTypeCode, width, height - 1);
+
+		if (genFile != null) {
+			return genFile;
+		}
+
+		genFile = genFileDao.getGenFileByRelTypeCodeAndRelIdAndFileExtTypeCodeAndWidthAndHeight(relTypeCode, relId,
+				fileExtTypeCode, width, height + 1);
+
+		if (genFile != null) {
+			return genFile;
+		}
+
+		return null;
 	}
 }
