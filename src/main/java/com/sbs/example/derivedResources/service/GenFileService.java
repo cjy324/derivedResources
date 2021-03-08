@@ -3,6 +3,7 @@ package com.sbs.example.derivedResources.service;
 import java.io.File;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,10 @@ public class GenFileService {
 
 	public GenFile getGenFile(int id) {
 		return genFileDao.getGenFileById(id);
+	}
+	
+	GenFile getGenFile(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+		return genFileDao.getGenFile(relTypeCode, relId, typeCode, type2Code, fileNo);
 	}
 
 	public ResultData save(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo,
