@@ -159,6 +159,11 @@ public class DeriveRequestService {
 
 		if (originStatus) {
 			String originFileName = Util.getFileNameFromUrl(originUrl);
+			
+			if ( Util.getFileExtTypeCodeFromFileName(originFileName).equals("img") == false ) {
+				originFileName = Util.getFileNameFromUrl(filePath);
+			}
+			
 			genFileService.save("deriveRequest", newDeriveRequestId, "common", "origin", 1, originFileName, filePath);
 		}
 		
