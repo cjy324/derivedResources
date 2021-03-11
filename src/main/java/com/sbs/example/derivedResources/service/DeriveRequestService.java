@@ -10,6 +10,7 @@ import com.sbs.example.derivedResources.dao.DeriveRequestDao;
 import com.sbs.example.derivedResources.dto.DeriveRequest;
 import com.sbs.example.derivedResources.dto.GenFile;
 import com.sbs.example.derivedResources.dto.ResultData;
+import com.sbs.example.derivedResources.exception.DownloadFileFailException;
 import com.sbs.example.derivedResources.util.Util;
 
 @Service
