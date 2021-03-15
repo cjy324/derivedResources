@@ -47,7 +47,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/derivedResources?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull
 custom:
-  genFileDirPath: /opt/tomcat/apache-tomcat-9.0.37/derived-resources.oa.gg-file
+  genFileDirPath: /opt/tomcat/latest/derived-resources.oa.gg-file
   tmpDirPath: "/tmp"
   logging:
     dir: /tmp/derived-resources-log

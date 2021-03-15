@@ -85,15 +85,22 @@ public class Util {
 			ReadableByteChannel readableByteChannel = Channels.newChannel(new URL(fileUrl).openStream());
 			FileChannel fileChannel = fileOutputStream.getChannel();
 			fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			throw new DownloadFileFailException();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "";
+		}
+
+		File file = new File(filePath);
+
+		if (file.length() == 0) {
+			throw new DownloadFileFailException();
 		}
 
 		if (fileExt.equals("tmp")) {
-			String ext = getFileExt(new File(filePath));
+			String ext = getFileExt(file);
+
+			if (ext == null || ext.length() == 0) {
+				throw new DownloadFileFailException();
+			}
 
 			String newFilePath = filePath.replaceAll("\\.tmp", "\\." + ext);
 			moveFile(filePath, newFilePath);
@@ -352,7 +359,7 @@ public class Util {
 		} catch (URISyntaxException e1) {
 			return null;
 		}
-		
+
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(redirectUri);
 		return new ResponseEntity(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
